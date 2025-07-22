@@ -14,12 +14,14 @@
   "devDependencies": {
     "@biomejs/biome": "2.0.5",
     "@types/node": "^24.0.15",
+    "drizzle-kit": "^0.31.4",
     "lint-staged": "^16.1.2",
     "typescript": "^5.8.3",
     "ultracite": "5.0.47"
   },
   "dependencies": {
     "@fastify/cors": "^11.0.1",
+    "drizzle-orm": "^0.44.3",
     "fastify": "^5.4.0",
     "fastify-type-provider-zod": "^5.0.2",
     "postgres": "^3.4.7",
