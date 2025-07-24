@@ -7,3 +7,7 @@
 - zod
 - docker
 - drizzle
+
+## Routes
+
+- get rooms
