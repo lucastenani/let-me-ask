@@ -9,7 +9,6 @@ export const getRoomsRoute: FastifyPluginCallbackZod = (app) => {
 			.select({
 				id: rooms.id,
 				name: rooms.name,
-				createdAt: rooms.createdAt,
 			})
 			.from(rooms)
 			.orderBy(rooms.createdAt)
