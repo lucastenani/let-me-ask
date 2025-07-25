@@ -60,7 +60,8 @@ npm install
 ### 5. Run database migrations
 
 ```bash
-npx drizzle-kit migrate
+npm run db:generate
+npm run db:migrate
 ```
 
 ### 6. (Optional) Seed the database
