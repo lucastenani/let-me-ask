@@ -32,7 +32,7 @@ export const createRoomRoute: FastifyPluginCallbackZod = (app) => {
 				throw new Error('Failed to create new room.')
 			}
 
-			return reply.status(201).send({ rooId: insertedRoom.id })
+			return reply.status(201).send({ roomId: insertedRoom.id })
 		}
 	)
 }
