@@ -30,6 +30,18 @@ Content-Type: application/json
 
 ###
 
+# Create room question
+# @name createRoomQuestion
+POST {{baseUrl}}/rooms/{{roomId}}/questions
+Accept: application/json
+Content-Type: application/json
+
+{
+	"question": "Test question"
+}
+
+###
+
 # Get room questions
 # @name getRoomQuestions
 
