@@ -103,3 +103,4 @@ You can use the client.http file located in the root directory to test API reque
   - POST /rooms – Create room
   - GET /rooms/:roomId/questions – List room questions
   - POST /rooms/:roomId/questions – Create room question
+  - GET /rooms/:roomId – Get Room details
