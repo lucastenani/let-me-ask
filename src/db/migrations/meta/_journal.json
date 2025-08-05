@@ -15,6 +15,13 @@
       "when": 1753413474488,
       "tag": "0001_cute_miek",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1754409706700,
+      "tag": "0002_closed_vampiro",
+      "breakpoints": true
     }
   ]
 }
