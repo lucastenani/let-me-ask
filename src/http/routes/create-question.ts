@@ -1,7 +1,9 @@
+import { and, eq, sql } from 'drizzle-orm'
 import type { FastifyPluginCallbackZod } from 'fastify-type-provider-zod'
 import z from 'zod/v4'
 import { db } from '../../db/connection.ts'
 import { schema } from '../../db/schema/index.ts'
+import { generateEmbeddings } from '../../services/gemini.ts'
 
 export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
 	app.post(
@@ -15,22 +17,47 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
 			},
 		},
 		async (request, reply) => {
-			const { questions } = schema
+			const { questions, audioChunks } = schema
 			const { question } = request.body
 			const { roomId } = request.params
 
-			const result = await db
-				.insert(questions)
-				.values({ roomId, question })
-				.returning()
+			const embeddings = await generateEmbeddings(question)
 
-			const insertedQuestion = result[0]
+			const embeddingsAsString = `[${embeddings.join(',')}]`
 
-			if (!insertedQuestion) {
-				throw new Error('Failed to create new question.')
-			}
+			const chunks = await db
+				.select({
+					id: audioChunks.id,
+					transcription: audioChunks.transcription,
+					similarity: sql<number>`1 - (${audioChunks.embeddings} <=> ${embeddingsAsString}::vector)`,
+				})
+				.from(audioChunks)
+				.where(
+					and(
+						eq(audioChunks.roomId, roomId),
+						sql`1 - (${audioChunks.embeddings} <=> ${embeddingsAsString}::vector) > 0.7`
+					)
+				)
+				.orderBy(
+					sql`${audioChunks.embeddings} <=> ${embeddingsAsString}::vector`
+				)
+				.limit(3)
 
-			return reply.status(201).send({ questionId: insertedQuestion.id })
+			console.log(chunks)
+			return reply.status(201).send({ chunks })
+
+			// const result = await db
+			// 	.insert(questions)
+			// 	.values({ roomId, question })
+			// 	.returning()
+
+			// const insertedQuestion = result[0]
+
+			// if (!insertedQuestion) {
+			// 	throw new Error('Failed to create new question.')
+			// }
+
+			// return reply.status(201).send({ questionId: insertedQuestion.id })
 		}
 	)
 }
