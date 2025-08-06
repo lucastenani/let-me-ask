@@ -9,30 +9,34 @@ export const createRoomRoute: FastifyPluginCallbackZod = (app) => {
 		{
 			schema: {
 				body: z.object({
-					name: z.string().min(4),
+					name: z.string().min(4, 'Name must be at least 4 characters long'),
 					description: z.string().optional(),
 				}),
 			},
 		},
 		async (request, reply) => {
-			const { rooms } = schema
-			const { name, description } = request.body
+			try {
+				const { rooms } = schema
+				const { name, description } = request.body
 
-			const result = await db
-				.insert(rooms)
-				.values({
-					name,
-					description,
-				})
-				.returning()
+				const result = await db
+					.insert(rooms)
+					.values({
+						name,
+						description,
+					})
+					.returning()
 
-			const insertedRoom = result[0]
+				const insertedRoom = result[0]
+				if (!insertedRoom) {
+					return reply.status(500).send({ error: 'Failed to create new room' })
+				}
 
-			if (!insertedRoom) {
-				throw new Error('Failed to create new room.')
+				return reply.status(201).send({ roomId: insertedRoom.id })
+			} catch (err) {
+				app.log.error(err)
+				return reply.status(500).send({ error: 'Internal server error' })
 			}
-
-			return reply.status(201).send({ roomId: insertedRoom.id })
 		}
 	)
 }

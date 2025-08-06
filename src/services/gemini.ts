@@ -3,9 +3,6 @@ import { env } from '../env.ts'
 
 const gemini = new GoogleGenAI({
 	apiKey: env.GEMINI_API_KEY,
-	// model: "gemini-1.5-flash",
-	// baseUrl: "https://generativelanguage.googleapis.com/v1beta",
-	// timeout: 10000, // Optional timeout in milliseconds
 })
 
 const model = 'gemini-2.5-flash'

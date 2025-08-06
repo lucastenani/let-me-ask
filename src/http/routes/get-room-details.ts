@@ -9,32 +9,37 @@ export const getRoomDetailsRoute: FastifyPluginCallbackZod = (app) => {
 		'/rooms/:roomId',
 		{
 			schema: {
-				params: z.object({ roomId: z.uuid() }),
+				params: z.object({ roomId: z.uuid('Invalid roomId format') }),
 			},
 		},
 		async (request, reply) => {
-			const { rooms } = schema
-			const { roomId } = request.params
+			try {
+				const { rooms } = schema
+				const { roomId } = request.params
 
-			const result = await db
-				.select({
-					id: rooms.id,
-					name: rooms.name,
-					description: rooms.description,
-					createdAt: rooms.createdAt,
-				})
-				.from(rooms)
-				.where(eq(rooms.id, roomId))
-				.orderBy(desc(rooms.createdAt))
-				.limit(1)
+				const result = await db
+					.select({
+						id: rooms.id,
+						name: rooms.name,
+						description: rooms.description,
+						createdAt: rooms.createdAt,
+					})
+					.from(rooms)
+					.where(eq(rooms.id, roomId))
+					.orderBy(desc(rooms.createdAt))
+					.limit(1)
 
-			const room = result[0]
+				const room = result[0]
 
-			if (!room) {
-				return reply.status(404).send({ error: 'Room not found' })
+				if (!room) {
+					return reply.status(404).send({ error: 'Room not found' })
+				}
+
+				return reply.status(200).send(room)
+			} catch (err) {
+				app.log.error(err)
+				return reply.status(500).send({ error: 'Internal server error' })
 			}
-
-			return room
 		}
 	)
 }
