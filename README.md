@@ -21,7 +21,6 @@ This is the backend API for the full-stack project [Let me Ask](https://github.c
 - **Zod** – Schema validation for request inputs and environment variables
 - **Docker + Docker Compose** – Containerized PostgreSQL database
 - **Biome** – Code formatting and linting
-  @fastify/multipart
 
 ## 🧱 Architecture
 
