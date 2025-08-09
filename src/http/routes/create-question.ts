@@ -51,12 +51,6 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
 					)
 					.limit(3)
 
-				if (chunks.length === 0) {
-					return reply
-						.status(404)
-						.send({ error: 'No relevant context found for the question' })
-				}
-
 				let answer: string
 				try {
 					const transcriptions = chunks.map((chunk) => chunk.transcription)
@@ -79,7 +73,10 @@ export const createQuestionRoute: FastifyPluginCallbackZod = (app) => {
 						.send({ error: 'Failed to create new question' })
 				}
 
-				return reply.status(201).send({ questionId: insertedQuestion.id })
+				return reply.status(201).send({
+					questionId: insertedQuestion.id,
+					answer,
+				})
 			} catch {
 				return reply.status(500).send({ error: 'Internal server error' })
 			}

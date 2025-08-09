@@ -25,7 +25,9 @@ export const uploadAudioRoute: FastifyPluginCallbackZod = (app) => {
 				}
 
 				if (
-					!['audio/mpeg', 'audio/wav', 'audio/mp4'].includes(audio.mimetype)
+					!['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/webm'].includes(
+						audio.mimetype
+					)
 				) {
 					return reply.status(400).send({ error: 'Unsupported audio format' })
 				}
